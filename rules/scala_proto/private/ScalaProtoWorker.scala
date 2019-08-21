@@ -45,7 +45,7 @@ object ScalaProtoWorker extends WorkerMain[Unit] {
     Files.createDirectories(scalaOut)
 
     val generatorParams = namespace.get[String]("generator_params")
-    val params = if (generatorParams == "") {
+    val params = if (generatorParams == null) {
       s"--scala_out=$scalaOut" :: sources.map(_.getPath)
     } else {
       s"--scala_out=$generatorParams:$scalaOut" :: sources.map(_.getPath)

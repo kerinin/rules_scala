@@ -10,11 +10,7 @@ load(
 scala_proto_library_private_attributes = {}
 
 def scala_proto_library_implementation(ctx):
-    proto_deps = [dep for dep in ctx.attr.deps if hasattr(dep, "proto")]
-    if proto_deps != ctx.attr.deps:
-        fail("disallowed non proto deps in %s" % ctx.attr.deps)
-
-    protos = [dep.proto for dep in proto_deps]
+    protos = [dep[ProtoInfo] for dep in ctx.attr.deps]
 
     transitive_sources = depset(transitive = [proto.transitive_sources for proto in protos])
     transitive_proto_path = depset(transitive = [proto.transitive_proto_path for proto in protos])

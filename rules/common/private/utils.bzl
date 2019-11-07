@@ -24,7 +24,7 @@ def strip_margin(str, delim = "|"):
 
 def _strip_margin_line(line, delim):
     trimmed = line.lstrip(" ")
-    pos = trimmed.find(delim, end = 1)
+    pos = trimmed.find(delim, 0, 1)
     if pos == 0:
         return trimmed[1:]
     else:

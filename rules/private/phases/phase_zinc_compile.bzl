@@ -92,10 +92,9 @@ def phase_zinc_compile(ctx, g):
         arguments = [args],
     )
 
-    jars = []
-    for jar in g.javainfo.java_info.outputs.jars:
-        jars.append(jar.class_jar)
-        jars.append(jar.ijar)
+    jars_depset = depset([jar.class_jar for jar in g.javainfo.java_info.outputs.jars])
+    ijars_depset = depset([jar.ijar for jar in g.javainfo.java_info.outputs.jars])
+
     zinc_info = _ZincInfo(
         apis = apis,
         deps_files = depset([apis, relations], transitive = [zinc.deps_files for zinc in zincs]),
@@ -104,7 +103,7 @@ def phase_zinc_compile(ctx, g):
         deps = depset(
             [struct(
                 apis = apis,
-                jars = jars,
+                jars = depset(transitive = [jars_depset, ijars_depset]),
                 label = ctx.label,
                 relations = relations,
             )],
@@ -126,4 +125,4 @@ def _compile_analysis(analysis):
         "_{}".format(analysis.label),
         analysis.apis.path,
         analysis.relations.path,
-    ] + [jar.path for jar in analysis.jars]
+    ] + [jar.path for jar in analysis.jars.to_list()]
